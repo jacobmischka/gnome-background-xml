@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import xml.etree.ElementTree as ET
 import imghdr
@@ -17,19 +17,20 @@ with open(outpath, "w") as outfile:
 	outfile.write('<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">')
 	wallpapers = ET.Element("wallpapers")
 	tree = ET.ElementTree(wallpapers)
-	for image in os.listdir(wallpaper_dir):
-		image_path = os.path.join(wallpaper_dir, image)
-		if imghdr.what(image_path):
-			wallpaper = ET.SubElement(wallpapers, "wallpaper")
-			wallpaper.set("deleted", "false")
-			name = ET.SubElement(wallpaper, "name")
-			name.text = os.path.splitext(image)[0]
-			filename = ET.SubElement(wallpaper, "filename")
-			filename.text = image_path
-			options = ET.SubElement(wallpaper, "options")
-			options.text = "zoom"
-			pcolor = ET.SubElement(wallpaper, "pcolor")
-			pcolor.text = "#ffffff"
-			scolor = ET.SubElement(wallpaper, "scolor")
-			scolor.text = "#000000"
+	for root, dirs, images in os.walk(wallpaper_dir):
+		for image in images:
+			image_path = os.path.join(root, image)
+			if imghdr.what(image_path):
+				wallpaper = ET.SubElement(wallpapers, "wallpaper")
+				wallpaper.set("deleted", "false")
+				name = ET.SubElement(wallpaper, "name")
+				name.text = os.path.splitext(image)[0]
+				filename = ET.SubElement(wallpaper, "filename")
+				filename.text = image_path
+				options = ET.SubElement(wallpaper, "options")
+				options.text = "zoom"
+				pcolor = ET.SubElement(wallpaper, "pcolor")
+				pcolor.text = "#ffffff"
+				scolor = ET.SubElement(wallpaper, "scolor")
+				scolor.text = "#000000"
 	tree.write(outfile, encoding="unicode")
